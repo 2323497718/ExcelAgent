@@ -1,0 +1,622 @@
+openapi: 3.0.3
+info:
+  title: Bookinfo AI Agent API
+  description: |
+    Bookinfo 微服务系统的 AI Agent 工具接口。
+    
+    ## 概述
+    本 API 封装了 Bookinfo 微服务系统的核心功能，供智能体平台（Dify、Coze、FastGPT等）调用。
+    
+    ## 可用工具
+    1. **业务接口** - 书籍详情、评分查询、评论列表
+    2. **监控接口** - Prometheus 指标查询
+    3. **集群接口** - Kubernetes 资源状态
+    
+    ## 认证
+    部分接口需要 API Key 认证，请在请求头中添加 `X-API-Key`。
+  version: 1.0.0
+  contact:
+    name: DevOps Team
+    email: devops@example.com
+
+servers:
+  - url: http://localhost:8000
+    description: 本地开发服务器
+  - url: https://bookinfo-api.example.com
+    description: 生产服务器
+
+tags:
+  - name: Bookstore
+    description: 书店业务接口
+  - name: Monitoring
+    description: 监控查询接口
+  - name: Cluster
+    description: K8s 集群接口
+
+paths:
+  # ==================== 书店业务接口 ====================
+  /api/books:
+    get:
+      tags:
+        - Bookstore
+      summary: 获取书籍列表
+      description: 获取所有可用书籍的基本信息
+      operationId: getBooks
+      responses:
+        '200':
+          description: 成功返回书籍列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BookSummary'
+    
+  /api/books/{book_id}:
+    get:
+      tags:
+        - Bookstore
+      summary: 获取书籍详情
+      description: 根据书籍 ID 获取书籍的详细信息，包括评分
+      operationId: getBookDetail
+      parameters:
+        - name: book_id
+          in: path
+          required: true
+          description: 书籍 ID
+          schema:
+            type: string
+            example: "1"
+      responses:
+        '200':
+          description: 成功返回书籍详情
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '404':
+          description: 书籍不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/ratings:
+    get:
+      tags:
+        - Bookstore
+      summary: 获取所有评分
+      description: 获取系统中所有书籍的用户评分列表
+      operationId: getAllRatings
+      responses:
+        '200':
+          description: 成功返回评分列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Rating'
+    
+  /api/ratings/{book_id}:
+    get:
+      tags:
+        - Bookstore
+      summary: 获取书籍评分
+      description: 根据书籍 ID 获取该书籍的用户评分
+      operationId: getBookRating
+      parameters:
+        - name: book_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功返回评分
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+
+  /api/reviews/{book_id}:
+    get:
+      tags:
+        - Bookstore
+      summary: 获取书籍评论
+      description: 获取指定书籍的用户评论列表
+      operationId: getBookReviews
+      parameters:
+        - name: book_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功返回评论列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  book_id:
+                    type: string
+                  reviews:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+
+  # ==================== 监控接口 ====================
+  /api/metrics/pod/{namespace}:
+    get:
+      tags:
+        - Monitoring
+      summary: 获取 Pod 指标
+      description: 获取指定命名空间下所有 Pod 的 CPU 和内存使用情况
+      operationId: getPodMetrics
+      parameters:
+        - name: namespace
+          in: path
+          required: true
+          schema:
+            type: string
+            default: default
+        - name: metric_type
+          in: query
+          description: 指标类型
+          schema:
+            type: string
+            enum: [cpu, memory, all]
+            default: all
+      responses:
+        '200':
+          description: 成功返回 Pod 指标
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  namespace:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+                  metrics:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PodMetric'
+
+  /api/metrics/service/{service_name}:
+    get:
+      tags:
+        - Monitoring
+      summary: 获取服务指标
+      description: 获取指定服务的性能指标
+      operationId: getServiceMetrics
+      parameters:
+        - name: service_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: duration
+          in: query
+          description: 查询时间范围（分钟）
+          schema:
+            type: integer
+            default: 5
+            minimum: 1
+            maximum: 60
+      responses:
+        '200':
+          description: 成功返回服务指标
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceMetric'
+
+  /api/metrics/summary:
+    get:
+      tags:
+        - Monitoring
+      summary: 获取集群健康摘要
+      description: 获取整个集群的健康状态摘要报告
+      operationId: getClusterSummary
+      responses:
+        '200':
+          description: 成功返回集群摘要
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterSummary'
+
+  # ==================== 集群接口 ====================
+  /api/cluster/pods/{namespace}:
+    get:
+      tags:
+        - Cluster
+      summary: 获取 Pod 列表
+      description: 获取指定命名空间下的 Pod 列表及状态
+      operationId: getClusterPods
+      parameters:
+        - name: namespace
+          in: path
+          required: true
+          schema:
+            type: string
+            default: default
+      responses:
+        '200':
+          description: 成功返回 Pod 列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  namespace:
+                    type: string
+                  pods:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/K8sPod'
+
+  /api/cluster/events/{namespace}:
+    get:
+      tags:
+        - Cluster
+      summary: 获取集群事件
+      description: 获取指定命名空间最近的集群事件
+      operationId: getClusterEvents
+      parameters:
+        - name: namespace
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: minutes
+          in: query
+          description: 最近多少分钟的事件
+          schema:
+            type: integer
+            default: 60
+      responses:
+        '200':
+          description: 成功返回事件列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/K8sEvent'
+
+  # ==================== 智能问答接口 ====================
+  /api/chat:
+    post:
+      tags:
+        - AI Chat
+      summary: 智能问答
+      description: |
+        发送问答请求，AI 将根据知识库和可用工具回答问题。
+        
+        示例问题：
+        - "《Kubernetes 实战》这本书的评分怎么样？"
+        - "现在各个服务的内存占用情况怎么样？"
+        - "reviews 服务有什么问题吗？"
+      operationId: chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: 成功返回回答
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+
+  /api/tools:
+    get:
+      tags:
+        - AI Chat
+      summary: 获取可用工具列表
+      description: 返回所有可用的 AI Agent 工具
+      operationId: getTools
+      responses:
+        '200':
+          description: 成功返回工具列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tools:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ToolDefinition'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # ============ 书店相关 ============
+    BookSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        title:
+          type: string
+          example: "Kubernetes 实战"
+        author:
+          type: string
+          example: "张三"
+        price:
+          type: number
+          format: float
+          example: 99.00
+
+    BookDetail:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
+        publisher:
+          type: string
+        publish_date:
+          type: string
+          format: date
+        price:
+          type: number
+        description:
+          type: string
+        rating:
+          $ref: '#/components/schemas/Rating'
+        reviews_count:
+          type: integer
+          example: 42
+
+    Rating:
+      type: object
+      properties:
+        book_id:
+          type: string
+        average:
+          type: number
+          format: float
+          example: 4.5
+        count:
+          type: integer
+          example: 128
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        text:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    # ============ 监控相关 ============
+    PodMetric:
+      type: object
+      properties:
+        pod_name:
+          type: string
+        namespace:
+          type: string
+        cpu_cores:
+          type: number
+          format: float
+          description: CPU 使用（核数）
+          example: 0.15
+        memory_mib:
+          type: number
+          format: float
+          description: 内存使用（MiB）
+          example: 256.5
+        status:
+          type: string
+          enum: [Running, Pending, Failed]
+
+    ServiceMetric:
+      type: object
+      properties:
+        service_name:
+          type: string
+        requests_per_second:
+          type: number
+        avg_latency_ms:
+          type: number
+        error_rate:
+          type: number
+        p99_latency_ms:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+
+    ClusterSummary:
+      type: object
+      properties:
+        total_pods:
+          type: integer
+        running_pods:
+          type: integer
+        failed_pods:
+          type: integer
+        cpu_usage_percent:
+          type: number
+        memory_usage_percent:
+          type: number
+        services_health:
+          type: object
+          additionalProperties:
+            type: string
+            enum: [healthy, degraded, unhealthy]
+        timestamp:
+          type: string
+          format: date-time
+
+    # ============ K8s 相关 ============
+    K8sPod:
+      type: object
+      properties:
+        name:
+          type: string
+        namespace:
+          type: string
+        status:
+          type: string
+        ready:
+          type: string
+          example: "2/2"
+        restarts:
+          type: integer
+        age:
+          type: string
+        ip:
+          type: string
+        node:
+          type: string
+
+    K8sEvent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [Normal, Warning]
+        reason:
+          type: string
+        message:
+          type: string
+        involved_object:
+          type: string
+        first_timestamp:
+          type: string
+          format: date-time
+        last_timestamp:
+          type: string
+          format: date-time
+
+    # ============ 智能问答 ============
+    ChatRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: 用户问题
+          example: "《Kubernetes 实战》这本书的评分怎么样？"
+        session_id:
+          type: string
+          description: 会话 ID（用于多轮对话）
+        context:
+          type: object
+          description: 额外上下文信息
+
+    ChatResponse:
+      type: object
+      properties:
+        session_id:
+          type: string
+        message:
+          type: string
+          description: AI 回答
+        sources:
+          type: array
+          description: 回答来源
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum: [api, knowledge_base, tool]
+              content:
+                type: string
+        tools_used:
+          type: array
+          description: 调用的工具列表
+          items:
+            type: string
+
+    ToolDefinition:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "get_book_rating"
+        description:
+          type: string
+        parameters:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+              required:
+                type: boolean
+              description:
+                type: string
+        returns:
+          type: object
+          description: 返回值说明
+
+    # ============ 通用 ============
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: "Resource not found"
+        details:
+          type: string
