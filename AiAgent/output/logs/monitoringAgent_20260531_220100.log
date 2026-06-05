@@ -1,0 +1,8 @@
+2026-05-31 22:01:00 - monitoringAgent - INFO - Logger initialized. Log file: ./output/logs\monitoringAgent_20260531_220100.log
+2026-05-31 22:01:02 - monitoringAgent - INFO - MonitoringAgent initialized successfully
+2026-05-31 22:01:23 - monitoringAgent - INFO - MonitoringAgent invoked: bookinfo 各个服务的内存占用情况怎么样
+2026-05-31 22:01:53 - monitoringAgent - INFO - Agent execution completed
+2026-05-31 22:03:30 - monitoringAgent - INFO - MonitoringAgent invoked: bookinfo 各个服务的内存占用情况怎么样
+2026-05-31 22:04:14 - monitoringAgent - INFO - Agent execution completed
+2026-05-31 22:04:33 - monitoringAgent - INFO - MonitoringAgent invoked: reviews-v2 最近五分钟的 CPU 使用趋势如何？
+2026-05-31 22:05:54 - monitoringAgent - INFO - Agent execution completed

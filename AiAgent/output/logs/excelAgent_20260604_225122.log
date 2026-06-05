@@ -1,0 +1,10 @@
+2026-06-04 22:51:22 - excelAgent - INFO - Logger initialized. Log file: C:\Users\23234\Desktop\AiAgent\output/logs\excelAgent_20260604_225122.log
+2026-06-04 22:51:25 - excelAgent - INFO - ExcelAgent initialized successfully
+2026-06-04 22:52:47 - excelAgent - INFO - ExcelAgent invoked: 创建一个员工信息表，包含姓名、部门、职位、电话。数据如下：['张伟', '技术部', '后端工程师', '13800001001'],['李娜', '产品部', '产品经理', '13800001002'], ['王强', '技术部', '前端工程师', '13800001003'],['刘芳', '设计部', 'UI设计师', '13800001004'],['陈明', '市场部', '市场专员', '13800001005'], ['赵丽', '人事部', 'HR专员', '13800001006'],['孙浩', '技术部', '架构师', '13800001007'], ['周婷', '财务部', '会计', '13800001008'],
+2026-06-04 22:52:59 - excelAgent - INFO - Agent execution completed
+2026-06-04 22:54:05 - excelAgent - INFO - ExcelAgent invoked: 阅读C:\Users\23234\Desktop\AiAgent\students.xlsx,告诉我里面的详细信息
+2026-06-04 22:54:11 - excelAgent - INFO - Agent execution completed
+2026-06-04 22:55:43 - excelAgent - INFO - ExcelAgent invoked: 将 C:\Users\23234\Desktop\AiAgent\students.xlsx性别为女的数据删除
+2026-06-04 22:55:45 - excelAgent - INFO - Agent execution completed
+2026-06-04 22:56:14 - excelAgent - INFO - ExcelAgent invoked: 读取 C:\Users\23234\Desktop\AiAgent\students.xlsx文件，然后删除性别为"女"的数据行
+2026-06-04 22:57:31 - excelAgent - INFO - Agent execution completed

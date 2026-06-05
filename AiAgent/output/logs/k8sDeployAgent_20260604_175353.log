@@ -1,0 +1,3 @@
+2026-06-04 17:53:53 - k8sDeployAgent - INFO - Logger initialized. Log file: ./output/logs\k8sDeployAgent_20260604_175353.log
+2026-06-04 17:53:56 - k8sDeployAgent - INFO - DeployAgent initialized successfully
+2026-06-04 17:54:07 - k8sDeployAgent - INFO - DeployAgent invoked: 请帮我将 bookinfo/src/details 这个服务部署到 K8s 集群中，暴露 9080 端口，副本数为 2，命名空间使用 bookinfo-agent。

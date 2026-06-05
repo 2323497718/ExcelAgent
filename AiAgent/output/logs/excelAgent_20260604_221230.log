@@ -1,0 +1,16 @@
+2026-06-04 22:12:30 - excelAgent - INFO - Logger initialized. Log file: C:\Users\23234\Desktop\AiAgent\output/logs\excelAgent_20260604_221230.log
+2026-06-04 22:12:32 - excelAgent - INFO - ExcelAgent initialized successfully
+2026-06-04 22:12:47 - excelAgent - INFO - ExcelAgent invoked: 创建一个员工信息表，包含姓名、部门、职位、电话
+2026-06-04 22:12:55 - excelAgent - INFO - Agent execution completed
+2026-06-04 22:16:26 - excelAgent - INFO - ExcelAgent invoked: ['张伟', '技术部', '后端工程师', '13800001001'],['李娜', '产品部', '产品经理', '13800001002'], ['王强', '技术部', '前端工程师', '13800001003'],['刘芳', '设计部', 'UI设计师', '13800001004'],['陈明', '市场部', '市场专员', '13800001005'], ['赵丽', '人事部', 'HR专员', '13800001006'],['孙浩', '技术部', '架构师', '13800001007'], ['周婷', '财务部', '会计', '13800001008'],将这些数据填到刚才你创造的表格中去
+2026-06-04 22:16:38 - excelAgent - INFO - Agent execution completed
+2026-06-04 22:20:33 - excelAgent - INFO - ExcelAgent invoked: 阅读C:\Users\23234\Desktop\AiAgent\students.xlsx中的数据，并向我汇报
+2026-06-04 22:20:39 - excelAgent - INFO - Agent execution completed
+2026-06-04 22:21:16 - excelAgent - INFO - ExcelAgent invoked: 添加数据 曹键，2023302111138，男这位学生的数据
+2026-06-04 22:21:23 - excelAgent - INFO - Agent execution completed
+2026-06-04 22:22:13 - excelAgent - INFO - ExcelAgent invoked: 在sheet1中添加新学生，曹键，2023302111137，男
+2026-06-04 22:22:21 - excelAgent - INFO - Agent execution completed
+2026-06-04 22:22:56 - excelAgent - INFO - ExcelAgent invoked: 姓名 曹键 学号 2023302111137 性别 女
+2026-06-04 22:23:00 - excelAgent - INFO - Agent execution completed
+2026-06-04 22:23:55 - excelAgent - INFO - ExcelAgent invoked: 将上面数据添加到C:\Users\23234\Desktop\AiAgent\students.xlsx
+2026-06-04 22:24:06 - excelAgent - INFO - Agent execution completed

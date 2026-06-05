@@ -1,0 +1,4 @@
+2026-05-31 22:12:41 - diagnosticAgent - INFO - Logger initialized. Log file: ./output/logs\diagnosticAgent_20260531_221241.log
+2026-05-31 22:12:43 - diagnosticAgent - INFO - DiagnosticAgent initialized successfully
+2026-05-31 22:14:05 - diagnosticAgent - INFO - DiagnosticAgent invoked: productpage 访问变慢了，帮我排查一下。
+2026-05-31 22:14:33 - diagnosticAgent - INFO - Agent execution completed
